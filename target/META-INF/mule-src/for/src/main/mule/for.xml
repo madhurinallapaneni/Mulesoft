@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:google-maps="http://www.mulesoft.org/schema/mule/google-maps" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/google-maps http://www.mulesoft.org/schema/mule/google-maps/current/mule-google-maps.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="625abb93-fc6b-483d-a4cd-fbe6cef33798" >
+		<http:listener-connection host="localhost" port="1111" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="47130310-2dc9-436a-948b-7f70ac2fe566" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="Madhuri@89" database="db7" />
+	</db:config>
+	<google-maps:config name="Google_Maps_Configuration" doc:name="Google Maps Configuration" doc:id="53ef26bc-d1cc-47f2-b369-604478d418cd" >
+		<google-maps:connection apiKey="AIzaSyB0fAdjojsj1vGGqn4mLNKLz-b_RXBXJZQ" />
+	</google-maps:config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="7a08486f-f383-4ed3-b0b9-9576b7ca8e46" />
+	<flow name="forFlow" doc:id="bd0ffef6-e671-4d3c-b0d7-3c648446744a" >
+		<http:listener doc:name="Listener" doc:id="0d98f2cb-743b-4ecb-8f90-1e39bb28c628" config-ref="HTTP_Listener_config" path="maps"/>
+		<http:request method="GET" doc:name="Request" doc:id="004b3062-58ed-435e-b5cf-5fcb67adcf87" config-ref="HTTP_Request_configuration" url="https://maps.googleapis.com/maps/api/directions/json">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"key" : "AIzaSyD2rB9mSx0o3ygWa6XJBDCOc6baoWCyNTc",
+	"origin" : "Disneyland",
+	"destination" : "Universal+Studios+Hollywood"
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="9f3926e0-54d1-4970-b8fd-68ba5b29a979" message="#[payload]"/>
+	</flow>
+</mule>
